@@ -30,7 +30,7 @@ git clone https://github.com/storytold/photocraft.git ./photocraft && (
 	git checkout "$TAG"
 	echo "${TAG#v}" > ~/version
 
-	export CARGO_PROFILE_RELEASE_LTO=fat
+	export CARGO_PROFILE_RELEASE_LTO=thin
 	export CARGO_PROFILE_RELEASE_PANIC=abort
 	cargo build --locked --release -p photocraft -p photocraft-cli
 
