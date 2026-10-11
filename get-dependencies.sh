@@ -30,6 +30,9 @@ git clone https://github.com/storytold/photocraft.git ./photocraft && (
 	git checkout "$TAG"
 	echo "${TAG#v}" > ~/version
 
+	# Drop the host library check; the libraries are bundled (storytold/photocraft#1144)
+	git apply ../patches/0001-drop-host-lib-check.patch
+
 	export CARGO_PROFILE_RELEASE_LTO=thin
 	export CARGO_PROFILE_RELEASE_PANIC=abort
 	cargo build --locked --release -p photocraft -p photocraft-cli

@@ -1,0 +1,27 @@
+--- a/apps/photocraft/src/linux_libs.rs	2026-10-11 07:31:07.304375223 +0000
++++ b/apps/photocraft/src/linux_libs.rs	2026-10-11 07:31:07.320101330 +0000
+@@ -265,20 +265,15 @@
+ /// Are all the libraries `session` needs found on this system? (For choosing a display server:
+ /// libraries the check can't find count as missing.)
+ pub fn available(session: DisplaySession) -> bool {
+-    check(session, &system_probe(), |p| p.exists()) == Verdict::Ok
++    let _ = session;
++    true
+ }
+ 
+ /// Run the check for the display server the window opens on against this system. `Err` carries
+ /// the message to print before exiting with a non-zero status.
+ pub fn preflight(session: DisplaySession) -> Result<(), String> {
+-    if std::env::var_os("PHOTOCRAFT_SKIP_LIB_CHECK").is_some_and(|v| !v.is_empty() && v != "0") {
+-        return Ok(());
+-    }
+-    if session == DisplaySession::None {
+-        return Ok(());
+-    }
+-    let verdict = check(session, &system_probe(), |p| p.exists());
+-    decide(session, verdict, || std::fs::read_to_string("/etc/os-release").map(|t| distro_from_os_release(&t)).unwrap_or(Distro::Unknown))
++    let _ = session;
++    Ok(())
+ }
+ 
+ /// `Err` with the message to print only when the linker cache was read and the libraries are
