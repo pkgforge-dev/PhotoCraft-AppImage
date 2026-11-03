@@ -30,6 +30,10 @@ git clone https://github.com/storytold/photocraft.git ./photocraft && (
 	git checkout "$TAG"
 	echo "${TAG#v}" > ~/version
 
+	# The AppImage is updated by its own package manager: drop the in-app release check, its
+	# "update available" prompt and the self-update that would replace this build.
+	git apply ../patches/0002-disable-update-checker.patch
+
 	# Drop the host library check; the libraries are bundled (storytold/photocraft#1144)
 	git apply ../patches/0001-drop-host-lib-check.patch
 

@@ -1,0 +1,42 @@
+diff --git a/apps/photocraft/src/main.rs b/apps/photocraft/src/main.rs
+index 75eb0ea..5d63941 100644
+--- a/apps/photocraft/src/main.rs
++++ b/apps/photocraft/src/main.rs
+@@ -72,6 +72,7 @@ mod startup_report;
+ // Tablet support (macOS AppKit monitor, Linux X11/Wayland, Windows barrel button).
+ mod tablet;
+ mod ui_state;
++#[allow(dead_code)]
+ mod updates;
+ mod window_frame;
+ 
+diff --git a/apps/photocraft/src/services.rs b/apps/photocraft/src/services.rs
+index cabd219..d1b8a2b 100644
+--- a/apps/photocraft/src/services.rs
++++ b/apps/photocraft/src/services.rs
+@@ -716,7 +716,9 @@ pub fn native(automation: Option<photocraft_automation::AuthorizedWorkspace>) ->
+         inbox: None,
+         open_url: Some(Box::new(|url: &str| open::that(url).map_err(|e| e.to_string()))),
+         beep: Some(platform_beep),
+-        check_updates: Some(crate::updates::service()),
++        // The AppImage is updated by its own package manager: no release check, prompt or
++        // self-update, which would replace this build with an upstream AppImage.
++        check_updates: None,
+         clipboard_set_image: Some({
+             let clip = clip.clone();
+             guarded_clipboard_set(move |w: u32, h: u32, px: &[u8]| {
+diff --git a/apps/photocraft/src/services/tests.rs b/apps/photocraft/src/services/tests.rs
+index a0a91aa..29f96ea 100644
+--- a/apps/photocraft/src/services/tests.rs
++++ b/apps/photocraft/src/services/tests.rs
+@@ -182,8 +182,8 @@ fn open_filters_keep_literal_extensions_on_windows_and_macos() {
+ }
+ 
+ #[test]
+-fn native_services_provide_update_transport() {
+-    assert!(native(None).check_updates.is_some());
++fn native_services_do_not_check_for_updates() {
++    assert!(native(None).check_updates.is_none());
+ }
+ 
+ #[test]
